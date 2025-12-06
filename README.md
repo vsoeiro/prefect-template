@@ -36,13 +36,32 @@ Quick start
    ```bash
    ./deploy.bat
    ```
-   This sets `PREFECT_API_URL` to `http://localhost:4200/api`, ensures the `docker-pool` work pool exists, and deploys everything in `prefect.yaml`. Code is pushed to MinIO (bucket `prefect-flows`) so workers can pull it.
+   - Shortcut: runs `uv run prefect config set PREFECT_API_URL=http://localhost:4200/api`, ensures the `docker-pool` work pool exists, and calls `uv run prefect deploy --all`.
+   - Equivalent manual command if you prefer the CLI directly:
+     ```bash
+     uv run prefect deploy --all
+     ```
+   Code is pushed to MinIO (bucket `prefect-flows`) so workers can pull it. The `.bat` script just bundles the steps and retries handling.
 
 Using the template
 ------------------
 - Add new flows under `flows/` and reference them in `prefect.yaml` with their entrypoints, parameters, and schedules.
 - Update or add work pools in Prefect UI or CLI as needed; the provided worker in Compose connects to `docker-pool`.
 - Access the Prefect UI at `http://localhost:4200` and the MinIO console at `http://localhost:9001` (credentials from `.env`).
+
+Multi-file flows
+----------------
+- Organize `flows/` as a package with submodules (e.g., `flows/services/db.py`, `flows/models/user.py`) and import them from your main flow file.
+- Point `prefect.yaml` to the main entrypoint (e.g., `entrypoint: flows/my_flow.py:my_flow`); Prefect deploy bundles the whole repo, so all modules go with it.
+- Avoid absolute paths; use package-relative imports and keep needed configs/data in the repo so they ship with the bundle.
+
+Multiple automations in one repo
+--------------------------------
+- Option 1 (cleanest): one repo per automation; each has its own `prefect.yaml` and `flows/`, so no collisions.
+- Option 2 (shared repo): keep each automation under its own folder, e.g., `automations/foo/flows/...` and `automations/bar/flows/...`.
+  - In each `prefect.yaml`, set `push.folder` (and `pull.folder`) to that subfolder and set the `entrypoint` accordingly (`automations/foo/flows/...`).
+  - Use distinct deployment names and, if needed, separate work pools to avoid confusion in the UI.
+- Ensure `.prefectignore` does not exclude those subfolders; everything under the chosen folder is what gets shipped.
 
 Notes
 -----
