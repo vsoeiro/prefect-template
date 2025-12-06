@@ -97,7 +97,7 @@ services:
       AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
       AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL}
       AWS_REGION: ${AWS_REGION}
-    command: prefect worker start --pool docker-pool
+    command: /bin/sh -c "pip install --no-cache-dir 'prefect-aws>=0.7.1' && prefect worker start --pool docker-pool"
     restart: on-failure
 
 volumes:
