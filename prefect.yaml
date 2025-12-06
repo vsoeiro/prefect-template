@@ -1,0 +1,38 @@
+name: hubia_ingestion
+prefect-version: 3.6.4
+
+push:
+  - prefect.deployments.steps.set_working_directory:
+      directory: .
+  - prefect_aws.deployments.steps.push_to_s3:
+      id: push_code
+      requires: prefect-aws
+      bucket: prefect-flows
+      folder: flows
+      credentials:
+        aws_access_key_id: "{{ $AWS_ACCESS_KEY_ID }}"
+        aws_secret_access_key: "{{ $AWS_SECRET_ACCESS_KEY }}"
+        aws_endpoint_url: "{{ $AWS_ENDPOINT_URL }}" 
+        region_name: "us-east-1"
+
+pull:
+  - prefect_aws.deployments.steps.pull_from_s3:
+      bucket: prefect-flows
+      folder: "{{ push_code.folder }}"
+      credentials:
+        aws_access_key_id: "{{ $AWS_ACCESS_KEY_ID }}"
+        aws_secret_access_key: "{{ $AWS_SECRET_ACCESS_KEY }}"
+        aws_endpoint_url: "http://minio:9000"
+        region_name: "us-east-1"
+
+deployments:
+  - name: greetings
+    description: "Simple greeting flow for testing."
+    entrypoint: flows/greetings_flow.py:greetings_flow
+    work_pool:
+      name: docker-pool
+    parameters:
+      name: "world"
+    schedules:
+      - cron: "0,15,30,45 * * * *"
+        timezone: "America/Sao_Paulo"
