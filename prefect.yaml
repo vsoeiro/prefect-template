@@ -10,7 +10,7 @@ deployments:
     description: "Simple greeting flow for testing."
     entrypoint: flows/greetings_flow.py:greetings_flow
     work_pool:
-      name: "{{ env.WORK_POOL_NAME | default('docker-pool') }}"
+      name: "{{ env.WORK_POOL_NAME | default('worker-pool') }}"
       job_variables:
         working_dir: /app
     parameters:

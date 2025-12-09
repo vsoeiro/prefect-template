@@ -1,6 +1,6 @@
 services:
   prefect-worker:
-    image: prefect-template-worker:latest
+    image: ${WORKER_IMAGE}
     build:
       context: .
       dockerfile: Dockerfile
