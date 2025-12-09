@@ -1,0 +1,18 @@
+services:
+  prefect-worker:
+    image: prefect-template-worker:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    environment:
+      PREFECT_API_URL: ${PREFECT_API_URL}
+      WORK_POOL_NAME: ${WORK_POOL_NAME}
+    command: prefect worker start --pool ${WORK_POOL_NAME}
+    restart: on-failure
+    networks:
+      - prefect-net
+
+networks:
+  prefect-net:
+    external: true
+    name: prefect-net
