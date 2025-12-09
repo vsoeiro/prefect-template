@@ -14,7 +14,7 @@ echo ========================================================
 echo.
 
 echo [1/6] Buildando imagem do worker...
-docker build -t %WORKER_IMAGE% -f Dockerfile.worker .
+docker build -t %WORKER_IMAGE% -f Dockerfile .
 IF %ERRORLEVEL% NEQ 0 (
     echo [ERRO] Falha ao buildar a imagem do worker.
     pause
