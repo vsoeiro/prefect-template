@@ -43,7 +43,7 @@ Flows and layout
 ----------------
 - Add flows under `flows/` and reference them in `prefect.yaml` (entrypoint, params).
 - Rebuild the image when code or deps change (`docker compose build prefect-worker` or `./deploy.bat`).
-- Pool: image starts `prefect worker start --pool ${WORK_POOL_NAME}`; adjust labels/vars via CLI/UI.
+- Pool: image starts `prefect worker start --pool ${WORK_POOL_NAME}`; adjust labels/vars via CLI/UI. If you change the pool name, keep `WORK_POOL_NAME` in `.env` and `work_pool.name` in `prefect.yaml` in sync.
 - UI: http://localhost:4200 (local compose).
 
 Roadmap / open points

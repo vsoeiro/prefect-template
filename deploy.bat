@@ -38,12 +38,23 @@ IF %ERRORLEVEL% NEQ 0 (
 
 echo.
 echo [4/6] Setting Prefect API URL for local use...
+SET PREFECT_API_URL=%LOCAL_PREFECT_API_URL%
 call uv run prefect config set PREFECT_API_URL=%LOCAL_PREFECT_API_URL%
 
 echo.
 echo [5/6] Ensuring Work Pool exists...
-call uv run prefect work-pool create "%WORK_POOL_NAME%" --type process >nul 2>&1
-echo (Work Pool ensured)
+call uv run prefect work-pool inspect "%WORK_POOL_NAME%" >nul 2>&1
+IF %ERRORLEVEL% NEQ 0 (
+    echo Work pool not found; creating "%WORK_POOL_NAME%"...
+    call uv run prefect work-pool create "%WORK_POOL_NAME%" --type process
+    IF %ERRORLEVEL% NEQ 0 (
+        echo [ERROR] Failed to create work pool "%WORK_POOL_NAME%".
+        pause
+        exit /b %ERRORLEVEL%
+    )
+) ELSE (
+    echo (Work Pool exists)
+)
 
 echo.
 echo [6/6] Registering deployments in Prefect Server...

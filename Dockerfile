@@ -9,7 +9,7 @@ ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
 RUN pip install --no-cache-dir uv
 
 COPY pyproject.toml uv.lock ./
-RUN uv pip install --system --locked
+RUN uv pip install --system .
 
 COPY flows ./flows
 COPY prefect.yaml ./prefect.yaml

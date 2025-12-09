@@ -5,12 +5,16 @@ build:
   - prefect.deployments.steps.set_working_directory:
       directory: .
 
+pull:
+  - prefect.deployments.steps.set_working_directory:
+      directory: /app
+
 deployments:
   - name: greetings
     description: "Simple greeting flow for testing."
     entrypoint: flows/greetings_flow.py:greetings_flow
     work_pool:
-      name: "{{ env.WORK_POOL_NAME | default('worker-pool') }}"
+      name: worker-pool
       job_variables:
         working_dir: /app
     parameters:
