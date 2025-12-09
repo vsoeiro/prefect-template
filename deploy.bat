@@ -9,7 +9,7 @@ IF "%WORKER_IMAGE%"=="" SET WORKER_IMAGE=prefect-template-worker:latest
 
 echo.
 echo ========================================================
-echo      STARTING DEPLOY PROCESS - HUBIA INGESTION
+echo      STARTING DEPLOY PROCESS - PREFECT TEMPLATE
 echo ========================================================
 echo.
 

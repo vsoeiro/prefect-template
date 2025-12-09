@@ -14,4 +14,4 @@ RUN uv pip install --system .
 COPY flows ./flows
 COPY prefect.yaml ./prefect.yaml
 
-CMD ["prefect", "worker", "start", "--pool", "worker-pool"]
+CMD ["sh", "-c", "prefect worker start --pool ${WORK_POOL_NAME:-worker-pool}"]

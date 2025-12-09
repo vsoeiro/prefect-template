@@ -1,5 +1,5 @@
-name: hubia_ingestion
-prefect-version: 3.6.4
+name: prefect-template
+prefect-version: 3.6.5
 
 build:
   - prefect.deployments.steps.set_working_directory:

@@ -3,13 +3,13 @@ Prefect Template
 
 Minimal setup to run Prefect 3 flows with Postgres, Prefect Server/Services, and a worker container that already includes your code and dependencies.
 
-What’s inside
+What's inside
 -------------
 - `flows/`: examples; `greetings_flow.py` is the hello-world.
 - `prefect.yaml`: deployments (cron, params, pool) without external storage; the code is baked into the worker image.
 - `Dockerfile`: builds the worker image (tag comes from `WORKER_IMAGE` in `.env`).
-- `docker-compose.yaml`: brings up Prefect Server/Services, Postgres, and the worker (pool and image driven by `.env`).
-- `docker-compose-worker.yaml`: runs only the worker when you already have a Prefect API URL.
+- `docker-compose.yaml`: brings up Prefect Server/Services and Postgres and creates the shared network; the worker is not included here.
+- `docker-compose-worker.yaml`: brings up only the worker (image and pool driven by `.env`); use it alongside an existing Prefect API.
 - `deploy.bat`: builds the worker image, restarts the worker container, syncs deps with `uv`, points CLI to the local API, ensures the work pool, and runs `prefect deploy --all`.
 
 Prerequisites
@@ -24,11 +24,11 @@ How to use
    ```bash
    cp .env.example .env
    ```
-2) Start the local stack (builds the image on first run):
+2) Start the local stack (Prefect Server/Services + Postgres):
    ```bash
    docker compose up -d
    ```
-3) Register deployments (and rebuild the worker with current code):
+3) Register deployments and (re)launch the worker with the current image:
    ```bash
    ./deploy.bat
    ```
